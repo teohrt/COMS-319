@@ -1,0 +1,53 @@
+<html>
+
+<head>
+    <script src="./validation2.js"></script>
+    <title>Contact Information</title>
+</head>
+
+<body>
+    <form>
+        <table>
+            <tr>
+                <td>
+                    Email:
+                </td>
+                <td>
+                    <!-- <input type="email" id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" placeholder="example@iastate.edu"> -->
+                    <input type="email" id="email" placeholder="example@iastate.edu">
+                    <br>
+                </td>
+                <td>
+                    <img src="" id="emailImg">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Phone:
+                </td>
+                <td>
+                    <!--<input type="tel" id="phone" name="phone" placeholder="123-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" /> -->
+                    <input type="tel" id="phone" name="phone" placeholder="123-456-7890" />
+                    <br>
+                </td>
+                <td>
+                    <img src="" id="phoneImg">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Address:
+                </td>
+                <td>
+                    <input type="text" id="address" value="" placeholder="Ames,IA">
+                </td>
+                <td>
+                    <img src="" id="addressImg">
+                </td>
+            </tr>
+        </table>
+    </form>
+    <button onclick="handleClick()">Continue</button>
+</body>
+
+</html>
