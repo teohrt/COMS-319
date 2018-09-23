@@ -48,15 +48,13 @@ var Calc = {
     
     clearHandler : function() {
       document.getElementById("textRow").value = "";
+      Calc.Controller.unhighlightOperator();
+      Calc.Model.mem1 = "";
     },
     
     operatorHandler : function(that) {
       // Un-highlight previously selected operator
-      for (var i = 1; i < 5; i++) {
-        if (document.getElementById("operator" + i).style.color == "red") {
-          document.getElementById("operator" + i).style.color = "";
-        }
-      }
+      Calc.Controller.unhighlightOperator();
 
       // If mem1 hasn't been filled yet
       if (Calc.Model.mem1 == "") {
@@ -67,6 +65,29 @@ var Calc = {
       // Select operator
       Calc.Model.operator = that.value;
       that.style.color = "red";
+    },
+
+    equalHandler : function() {
+      // Validate input
+      if (isNaN(Calc.Model.mem1) || isNaN(document.getElementById("textRow").value)){
+        alert("Only use numbers!")
+        return;
+      }
+      // Display evaluated expression
+      var expression = "(" + Calc.Model.mem1 + ")" + Calc.Model.operator + "(" + document.getElementById("textRow").value + ")";
+      document.getElementById("textRow").value = eval(expression);
+
+      // Unhighlight operator and clear mem1
+      Calc.Controller.unhighlightOperator();
+      Calc.Model.mem1 = "";
+    },
+
+    unhighlightOperator : function() {
+      for (var i = 1; i < 5; i++) {
+        if (document.getElementById("operator" + i).style.color == "red") {
+          document.getElementById("operator" + i).style.color = "";
+        }
+      }
     }
   },
 
@@ -134,5 +155,7 @@ var Calc = {
     Calc.View.buttonDec.onclick = "Calc.Controller.decimalHandler(this)";
 
     Calc.View.buttonClear.onclick = "Calc.Controller.clearHandler()";
+
+    Calc.View.buttonEqu.onclick = "Calc.Controller.equalHandler()";
   }
 }
