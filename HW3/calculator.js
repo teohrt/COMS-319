@@ -1,8 +1,9 @@
 var Calc = {
 
   Model : {
-    // mem1 is the number input before the operator
+    // mem1 is the first operand
     // mem2 is reserved for memory operations
+    // operator stores the currently selected operator
     mem1 : "",
     mem2 : "",
     operator : ""
@@ -34,25 +35,25 @@ var Calc = {
   },
 
   Controller : {
-    numberHandler : function(that) {
+    numberHandler : (that) => {
       // Concatenates number on the text row
       document.getElementById("textRow").value = document.getElementById("textRow").value += that.value;
     },
     
-    decimalHandler : function(that) {
+    decimalHandler : (that) => {
       // Only allows decimals in the string if they haven't already been added
       if (!document.getElementById("textRow").value.includes(that.value)) {
         document.getElementById("textRow").value = document.getElementById("textRow").value += that.value;
       }
     },
     
-    clearHandler : function() {
+    clearHandler : () => {
       document.getElementById("textRow").value = "";
       Calc.Controller.unhighlightOperator();
       Calc.Model.mem1 = "";
     },
     
-    operatorHandler : function(that) {
+    operatorHandler : (that) => {
       // Un-highlight previously selected operator
       Calc.Controller.unhighlightOperator();
 
@@ -67,7 +68,7 @@ var Calc = {
       that.style.color = "red";
     },
 
-    equalHandler : function() {
+    equalHandler : () => {
       // Validate input
       if (isNaN(Calc.Model.mem1) || isNaN(document.getElementById("textRow").value)){
         alert("Only use numbers!")
@@ -82,16 +83,37 @@ var Calc = {
       Calc.Model.mem1 = "";
     },
 
-    unhighlightOperator : function() {
+    unhighlightOperator : () => {
       for (var i = 1; i < 5; i++) {
         if (document.getElementById("operator" + i).style.color == "red") {
           document.getElementById("operator" + i).style.color = "";
         }
       }
+    },
+
+    MCHandler : () => {
+      Calc.Model.mem2 = "";
+      document.getElementById("buttonMR").style.color = "";
+      document.getElementById("textRow").value = "";
+    },
+
+    MAddHandler : () => {
+      Calc.Model.mem2 = eval(Calc.Model.mem2 + "+" + document.getElementById("textRow").value);
+      document.getElementById("textRow").value = "";
+      document.getElementById("buttonMR").style.color = "blue"
+    },
+
+    MSubHandler : () => {
+      Calc.Model.mem2 = eval(Calc.Model.mem2 + "-" + document.getElementById("textRow").value);
+      document.getElementById("textRow").value = "";
+    },
+
+    MRHandler : () => {
+      document.getElementById("textRow").value = Calc.Model.mem2;
     }
   },
 
-  run : function() {
+  run : () => {
     Calc.attachHandlers();
     console.log(Calc.display());
     return Calc.display();
@@ -107,7 +129,7 @@ var Calc = {
     return s;
   },
 
-  display : function() {
+  display : () => {
     var s;
     s = "<table id=\"myTable\" border=2>"
     s += "<tr><td>";
@@ -143,7 +165,7 @@ var Calc = {
     return s;
   },
 
-  attachHandlers : function() {
+  attachHandlers : () => {
     for (var i = 0; i < 10; i++) {
       Calc.View["number" + i].onclick = "Calc.Controller.numberHandler(this)"; 
     }
@@ -153,9 +175,11 @@ var Calc = {
     }
 
     Calc.View.buttonDec.onclick = "Calc.Controller.decimalHandler(this)";
-
     Calc.View.buttonClear.onclick = "Calc.Controller.clearHandler()";
-
     Calc.View.buttonEqu.onclick = "Calc.Controller.equalHandler()";
+    Calc.View.buttonMC.onclick = "Calc.Controller.MCHandler()";
+    Calc.View.buttonMAdd.onclick = "Calc.Controller.MAddHandler()";
+    Calc.View.buttonMSub.onclick = "Calc.Controller.MSubHandler()";
+    Calc.View.buttonMR.onclick = "Calc.Controller.MRHandler()";
   }
 }
