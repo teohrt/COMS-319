@@ -36,14 +36,7 @@ function handleClick() {
         stateBool = false;
     }
 
-    // Remove this before you submit!!!!!!!!!!!!!!!!!!
-    // var fnameBool = true;
-    // var lnameBool = true;
-    // var genderBool = true;
-    // var stateBool = true;
-
     if (fnameBool && lnameBool && genderBool && stateBool) {
-        alert("Validated!")
         window.location.replace("./validation2.html")
     }
 }
