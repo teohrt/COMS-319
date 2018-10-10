@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,6 +15,12 @@ import javafx.stage.Stage;
 
 public class TicTacToe extends Application {
 
+	private GridPane pane;
+	private char currentPlayer = 'X';
+	private char winner = ' ';
+	private Cell[][] cell = new Cell[3][3];
+	private Label statusMsg = new Label("Welcome to TIC TAC TOE!! X's turn.");
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -34,25 +41,37 @@ public class TicTacToe extends Application {
 		}
 
 		private void handleClick() throws FileNotFoundException {
+			// Handling blank cells when the game hasn't been won
 			if (player == ' ' && currentPlayer != ' ') {
 				setPlayer(currentPlayer);
 
 				if (hasWon(currentPlayer)) {
-					statusMsg.setText(currentPlayer + " won!");
+					statusMsg.setText("Congratulations, " + currentPlayer + " won the game!");
 					winner = currentPlayer;
 					currentPlayer = ' ';
+
+					endGameButton(this);
 				}
 				else if (isBoardFull()) {
 					statusMsg.setText("It's a draw!");
 					currentPlayer = ' ';
+					
+					endGameButton(this);
 				}
 				else {
 					currentPlayer = (currentPlayer == 'X') ? 'O' : 'X'; 
 					statusMsg.setText(currentPlayer + " must play.");
 				}
 			}
+
+			// Handling end of game / incorrect piece
+			else if (isBoardFull()) {
+				statusMsg.setText("It's a draw!");
+			}
 			else if(currentPlayer == ' ') {
-				statusMsg.setText("GAME OVER!! " +  winner + " is the winner!");
+				if (isBoardFull()) {
+					statusMsg.setText("Congratulations, " + winner + " won the game!");
+				}
 			}
 			else {
 				statusMsg.setText(currentPlayer + " can't play here. Pick an empty cell!");
@@ -85,15 +104,9 @@ public class TicTacToe extends Application {
 		}
 	}
 
-	private char currentPlayer = 'X';
-	private char winner = ' ';
-	private Cell[][] cell = new Cell[3][3];
-	private Label statusMsg = new Label("Welcome to TIC TAC TOE!! X's turn.");
-
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		GridPane pane = new GridPane();
-
+		pane = new GridPane();
 		for (int i = 0 ; i < 3; i++) {
 			for (int j = 0 ; j < 3; j++) {
 				cell[i][j] = new Cell();
@@ -140,22 +153,24 @@ public class TicTacToe extends Application {
 		return false;
 	}
 
-	public boolean canPlayHere(char player) {
-		for (int i = 0; i < 3; i++) {
-			if (cell[i][0].getPlayer() == player && cell[i][1].getPlayer() == player && cell[i][2].getPlayer() == player) {
-				return true;
+	public void endGameButton(Cell cell) {
+		Button button = new Button("Play Again!");
+		button.setLayoutX(35);
+		button.setLayoutY(70);
+		button.setOnMouseClicked(e -> reset());
+		cell.getChildren().add(button);
+	}
+	
+	public void reset() {
+		for (int i = 0 ; i < 3; i++) {
+			for (int j = 0 ; j < 3; j++) {
+				cell[i][j].getChildren().clear();
+				cell[i][j] = new Cell();
+				pane.add(cell[i][j], j, i);
 			}
-			if (cell[0][i].getPlayer() == player && cell[1][i].getPlayer() == player && cell[2][i].getPlayer() == player) {
-				return true;
-			}
 		}
-		if (cell[0][0].getPlayer() == player && cell[1][1].getPlayer() == player && cell[2][2].getPlayer() == player) {
-			return true;
-		}
-		if (cell[0][2].getPlayer() == player && cell[1][1].getPlayer() == player && cell[2][0].getPlayer() == player) {
-			return true;
-		}
-		return false;
+		currentPlayer = 'X';
+		statusMsg.setText("Welcome to TIC TAC TOE!! X's turn.");
 	}
 }
 
