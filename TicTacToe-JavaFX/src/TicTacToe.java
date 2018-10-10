@@ -13,14 +13,14 @@ import javafx.stage.Stage;
 
 
 public class TicTacToe extends Application {
-	
+
 	public static void main(String[] args) {
 		launch(args);
 	}
 
 	public class Cell extends Pane {
 		private char player = ' ';
-		
+
 		public Cell() {
 			setStyle("-fx-border-color : black");
 			this.setPrefSize(150, 150);
@@ -32,13 +32,14 @@ public class TicTacToe extends Application {
 				}
 			});
 		}
-		
+
 		private void handleClick() throws FileNotFoundException {
 			if (player == ' ' && currentPlayer != ' ') {
 				setPlayer(currentPlayer);
-				
+
 				if (hasWon(currentPlayer)) {
 					statusMsg.setText(currentPlayer + " won!");
+					winner = currentPlayer;
 					currentPlayer = ' ';
 				}
 				else if (isBoardFull()) {
@@ -50,12 +51,18 @@ public class TicTacToe extends Application {
 					statusMsg.setText(currentPlayer + " must play.");
 				}
 			}
+			else if(currentPlayer == ' ') {
+				statusMsg.setText("GAME OVER!! " +  winner + " is the winner!");
+			}
+			else {
+				statusMsg.setText(currentPlayer + " can't play here. Pick an empty cell!");
+			}
 		}
 
 		public char getPlayer() {
 			return player;
 		}
-		
+
 		public void setPlayer(char player) throws FileNotFoundException {
 			if (player == 'X') {
 				this.player = player;
@@ -77,8 +84,9 @@ public class TicTacToe extends Application {
 			}
 		}
 	}
-	
+
 	private char currentPlayer = 'X';
+	private char winner = ' ';
 	private Cell[][] cell = new Cell[3][3];
 	private Label statusMsg = new Label("Welcome to TIC TAC TOE!! X's turn.");
 
@@ -92,17 +100,17 @@ public class TicTacToe extends Application {
 				pane.add(cell[i][j], j, i);
 			}
 		}
-		
+
 		BorderPane borderPane = new BorderPane();
 		borderPane.setCenter(pane);
 		borderPane.setBottom(statusMsg);
-		
+
 		Scene scene = new Scene(borderPane, 450, 460);
 		primaryStage.setTitle("Tic Tac Toe");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
-	
+
 	public boolean isBoardFull() {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
@@ -113,7 +121,7 @@ public class TicTacToe extends Application {
 		}
 		return true;
 	}
-	
+
 	public boolean hasWon(char player) {
 		for (int i = 0; i < 3; i++) {
 			if (cell[i][0].getPlayer() == player && cell[i][1].getPlayer() == player && cell[i][2].getPlayer() == player) {
@@ -131,7 +139,7 @@ public class TicTacToe extends Application {
 		}
 		return false;
 	}
-	
+
 	public boolean canPlayHere(char player) {
 		for (int i = 0; i < 3; i++) {
 			if (cell[i][0].getPlayer() == player && cell[i][1].getPlayer() == player && cell[i][2].getPlayer() == player) {
